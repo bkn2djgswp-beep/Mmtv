@@ -92,7 +92,6 @@
             color: var(--brand-main);
         }
 
-        /* 로그인/로그아웃 버튼 스타일 */
         .btn-auth {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--brand-sub);
@@ -160,7 +159,6 @@
             box-shadow: 0 6px 20px rgba(126, 108, 249, 0.4);
         }
 
-        /* 미니 버튼 스타일 */
         .btn-sm {
             padding: 6px 12px;
             font-size: 12px;
@@ -195,14 +193,29 @@
             font-size: 17px; color: #666; line-height: 1.6; max-width: 600px; margin-bottom: 40px;
         }
         .moti-container { position: relative; width: 220px; height: 220px; margin-bottom: 40px; }
+        
+        /* 캐릭터(Moti) 쫀득한 인터랙션 스타일 반영 */
         .moti {
             width: 100%; height: 100%;
             background: radial-gradient(circle at 35% 35%, #E6E1FF 0%, var(--brand-sub) 60%, var(--brand-main) 100%);
             border-radius: 50%; position: relative;
             box-shadow: 0 15px 35px rgba(126, 108, 249, 0.2), inset -10px -10px 20px rgba(0,0,0,0.1);
             animation: float 4s ease-in-out infinite;
+            transform-origin: center center;
             display: flex; justify-content: center; align-items: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-drag: none;
         }
+        
+        /* 꾹 눌렀을 때 세포가 쫀득하게 찌그러지는 효과 */
+        .moti.active {
+            animation-play-state: paused;
+            transform: scaleX(1.3) scaleY(0.7) translateY(20px);
+            transition: transform 0.15s ease-out;
+        }
+
         .moti-face { width: 80px; height: 40px; position: relative; display: flex; justify-content: space-between; align-items: center; }
         .moti-eye { width: 16px; height: 16px; background: #222; border-radius: 50%; position: relative; }
         .moti-eye::after { content: ''; position: absolute; top: 3px; left: 3px; width: 5px; height: 5px; background: white; border-radius: 50%; }
@@ -238,7 +251,8 @@
 
         /* --- MEMORY CELLS PAGE --- */
         .cells-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
-        .search-box { position: relative; width: 280px; }
+        .cells-header-right { display: flex; align-items: center; gap: 12px; }
+        .search-box { position: relative; width: 240px; }
         .search-box input {
             width: 100%; padding: 10px 16px 10px 40px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1);
             outline: none; background: rgba(255, 255, 255, 0.7); font-size: 14px; transition: all 0.3s ease;
@@ -246,6 +260,15 @@
         .search-box input:focus { background: var(--white); border-color: var(--brand-main); }
         .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
         
+        .btn-edit-mode {
+            background: #fff; border: 1px solid var(--brand-main); color: var(--brand-main);
+            padding: 9px 18px; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 6px;
+        }
+        .btn-edit-mode:hover { background: rgba(126, 108, 249, 0.08); }
+        .btn-edit-mode.active { background: #e63946; border-color: #e63946; color: white; }
+        .btn-edit-mode.active:hover { background: #c92a3a; }
+
         .petri-dish {
             width: 100%; height: 550px; background: rgba(167, 231, 215, 0.15);
             border-radius: 24px; border: 1px solid rgba(167, 231, 215, 0.3);
@@ -257,7 +280,7 @@
             display: flex; justify-content: center; align-items: center;
             color: #222; font-size: 12px; font-weight: 700;
             box-shadow: inset -4px -4px 12px rgba(0,0,0,0.05), 0 8px 20px rgba(0,0,0,0.05);
-            transition: filter 0.3s ease, opacity 0.3s ease;
+            transition: filter 0.3s ease, opacity 0.3s ease, border-color 0.2s;
             user-select: none; z-index: 5;
         }
         .memory-cell-node:hover {
@@ -266,35 +289,17 @@
         }
         .memory-cell-node.blur-out { opacity: 0.2; filter: blur(2px); }
         .memory-cell-node.highlight-in { opacity: 1; filter: blur(0); border: 2px solid var(--brand-main); }
+        
+        /* 세포 삭제 버튼 디자인 스타일 */
+        .cell-delete-btn {
+            position: absolute; top: -2px; right: -2px; width: 22px; height: 22px;
+            background: #e63946; color: white; border-radius: 50%; display: none;
+            justify-content: center; align-items: center; font-size: 11px; font-weight: 800;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); border: 1.5px solid white; cursor: pointer; z-index: 60;
+        }
+        .cell-delete-btn:hover { background: #c92a3a; transform: scale(1.1); }
+        
         .no-memories-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #778; font-weight: 600; display: none; }
-
-        /* --- POPUP MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            z-index: 99999 !important;
-            display: flex; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .modal-content {
-            background: white; width: 100%; max-width: 460px;
-            border-radius: 24px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            position: relative;
-        }
-        .modal-overlay.show .modal-content { transform: translateY(0); }
-        .modal-close {
-            position: absolute; top: 25px; right: 25px;
-            background: none; border: none; font-size: 26px; color: #aaa; cursor: pointer;
-            transition: color 0.2s; line-height: 1;
-        }
-        .modal-close:hover { color: #222; }
-        .modal-date { font-size: 14px; color: var(--brand-main); font-weight: 700; margin-bottom: 14px; }
-        .modal-body { font-size: 16px; line-height: 1.7; color: #444; white-space: pre-wrap; word-break: break-all; }
 
         /* --- CALENDAR PAGE --- */
         .calendar-container { max-width: 700px; margin: 0 auto; }
@@ -330,10 +335,117 @@
         .profile-footer-text { grid-column: span 2; text-align: center; font-size: 15px; font-weight: 600; color: #778; margin-top: 20px; }
         @media (max-width: 768px) { .profile-footer-text { grid-column: span 1; } }
 
+        /* --- POPUP MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            z-index: 99999 !important; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: white; width: 100%; max-width: 460px;
+            border-radius: 24px; padding: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .modal-close {
+            position: absolute; top: 25px; right: 25px;
+            background: none; border: none; font-size: 26px; color: #aaa; cursor: pointer;
+            transition: color 0.2s; line-height: 1;
+        }
+        .modal-close:hover { color: #222; }
+        .modal-date { font-size: 14px; color: var(--brand-main); font-weight: 700; margin-bottom: 14px; }
+        .modal-body { font-size: 16px; line-height: 1.7; color: #444; white-space: pre-wrap; word-break: break-all; }
+
+        /* Custom Auth Prompt Modal */
+        .auth-modal-content { text-align: center; }
+        .auth-modal-content h3 { margin-bottom: 15px; font-size: 20px; }
+        .auth-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ccc; margin-bottom: 15px; font-size: 15px; outline: none; text-align: center; }
+        .auth-modal-btns { display: flex; flex-direction: column; gap: 10px; }
+        .btn-guest { background: #f1f3f5; color: #495057; border: 1px solid #dee2e6; padding: 10px; border-radius: 20px; font-weight: 600; cursor: pointer; }
+
+        /* --- FOOTER STYLE --- */
+        footer {
+            width: 100%;
+            padding: 20px 0 30px 0;
+            text-align: center;
+            background: transparent;
+            z-index: 10;
+        }
+        .footer-content {
+            font-size: 13px;
+            color: #888ea8;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
         /* --- ANIMATIONS --- */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(185, 167, 255, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(185, 167, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(185, 167, 255, 0); } }
+
+        /* --- MOTI FEEDING INTERACTION STYLES --- */
+        .feeding-cell {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--mint) 70%, #76d7c4 100%);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 12px rgba(167, 231, 215, 0.6), inset -2px -2px 4px rgba(0,0,0,0.05);
+            cursor: grab;
+            user-select: none;
+            -webkit-user-drag: none;
+            z-index: 20;
+            touch-action: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: feedFloat 3s ease-in-out infinite alternate;
+        }
+
+        .feeding-cell:active {
+            cursor: grabbing;
+            transform: scale(1.2);
+            box-shadow: 0 8px 20px rgba(126, 108, 249, 0.4);
+        }
+
+        .feeding-cell.dragging {
+            animation: none !important;
+            z-index: 100;
+        }
+
+        .moti.eating {
+            animation: motiGulp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        .moti-heart-pop {
+            position: absolute;
+            color: #ff6b81;
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 30;
+            animation: heartPopUp 0.8s ease-out forwards;
+        }
+
+        @keyframes feedFloat {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(5px, -8px) rotate(10deg); }
+            100% { transform: translate(-5px, 6px) rotate(-10deg); }
+        }
+
+        @keyframes motiGulp {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.25) translateY(-10px); }
+            60% { transform: scale(0.85) translateY(5px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
+        @keyframes heartPopUp {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(0.5); }
+            100% { opacity: 0; transform: translate(-50%, -60px) scale(1.4); }
+        }
     </style>
 </head>
 <body>
@@ -348,7 +460,7 @@
                 <a id="nav-calendar" onclick="navigateTo('calendar')">Calendar</a>
                 <a id="nav-profile" onclick="navigateTo('profile')">Profile</a>
             </nav>
-            <button id="auth-btn" class="btn-auth" onclick="toggleAuth()">로그인</button>
+            <button id="auth-btn" class="btn-auth" onclick="openAuthModal()">로그인</button>
         </div>
     </header>
 
@@ -359,7 +471,13 @@
                 <h1 class="main-title">Remember Today.<br>Grow Tomorrow.</h1>
                 <p class="intro-text">기억세포는 한 번 경험한 정보를 오랫동안 기억합니다. Memotive는 소중한 하루를 세포로 보관하며 더 빛나는 내일을 만들어갑니다.</p>
                 <div class="moti-container">
-                    <div class="moti">
+                    <!-- 캐릭터 터치 및 마우스 반응성 이벤트 추가 -->
+                    <div class="moti" 
+                         onmousedown="motiPress(this)" 
+                         onmouseup="motiRelease(this)" 
+                         onmouseleave="motiRelease(this)"
+                         ontouchstart="motiPress(this)"
+                         ontouchend="motiRelease(this)">
                         <div class="moti-face">
                             <div class="moti-blush left"></div>
                             <div class="moti-eye" style="left:0"></div>
@@ -376,22 +494,25 @@
 
         <section id="page-write" class="page">
             <div class="write-wrapper glass-card">
-                <h2>오늘의 기억은 무엇인가요?</h2>
+                <h2>오늘의 기억은 무엇인가요? <span id="write-user-badge" style="font-size:14px; color:var(--brand-main);"></span></h2>
                 <div class="textarea-container">
                     <textarea id="memory-input" maxlength="300" placeholder="이곳에 기록된 당신의 경험은 세포가 되어 영원히 보관됩니다. (최대 300자)"></textarea>
                     <div class="char-counter"><span id="char-count">0</span> / 300</div>
                 </div>
-                <div class="write-actions"><button class="btn-primary" onclick="saveMemory()">기억 저장하기 <i class="fa-solid fa-cloud-arrow-up"></i></button></div>
+                <div class="write-actions"><button class="btn-primary" onclick="saveMemory()">기억 저장하기 <i class="fa-cloud-arrow-up fa-solid"></i></button></div>
             </div>
         </section>
 
         <section id="page-cells" class="page">
             <div class="glass-card">
                 <div class="cells-header">
-                    <h2>Memory Cells</h2>
-                    <div class="search-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="cell-search" placeholder="날짜 또는 내용 검색..." oninput="searchCells()">
+                    <h2>Memory Cells <span id="cells-user-badge" style="font-size:16px; color:#667085; font-weight:500;"></span></h2>
+                    <div class="cells-header-right">
+                        <button id="btn-edit-toggle" class="btn-edit-mode" onclick="toggleEditMode()"><i class="fa-solid fa-pen"></i> 편집하기</button>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="cell-search" placeholder="날짜 또는 내용 검색..." oninput="searchCells()">
+                        </div>
                     </div>
                 </div>
                 <div class="petri-dish" id="petri-dish">
@@ -413,7 +534,7 @@
 
         <section id="page-profile" class="page">
             <div class="glass-card">
-                <h2 style="margin-bottom: 25px;">성장 리포트</h2>
+                <h2 style="margin-bottom: 25px;">성장 리포트 <span id="profile-user-badge" style="font-size:16px; color:#667085; font-weight:500;"></span></h2>
                 <div class="profile-grid">
                     <div class="stats-list">
                         <div class="stat-item"><span class="stat-label">이번 달 총 기록 수</span><span class="stat-value" id="stat-month-count">0개</span></div>
@@ -444,6 +565,12 @@
         </section>
     </main>
 
+    <footer>
+        <div class="footer-content">
+            Chungnam Arts High School - Design Major | Created by Somi Kwon
+        </div>
+    </footer>
+
     <div class="modal-overlay" id="detail-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -452,65 +579,116 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-content auth-modal-content">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            <h3>Memotive 로그인</h3>
+            <input type="text" id="auth-username-input" class="auth-input" placeholder="계정 ID를 입력하세요">
+            <div class="auth-modal-btns">
+                <button class="btn-primary" style="justify-content:center; width:100%;" onclick="submitLogin()">로그인 / 가입</button>
+                <button class="btn-guest" onclick="loginAsGuest()">가입 없이 사용하기</button>
+            </div>
+        </div>
+    </div>
+
     <div class="toast" id="toast-alert">오늘의 기억이 저장되었습니다.</div>
 
     <script>
-        let memories = JSON.parse(localStorage.getItem('memories')) || [];
-        // 목표 저장 기능 연동 (기본값 20)
-        let targetGoal = parseInt(localStorage.getItem('targetGoal')) || 20;
-        // 로그인 상태 연동
-        let isLoggedIn = JSON.parse(localStorage.getItem('isLoggedIn')) || false;
+        let currentUser = localStorage.getItem('memotive_current_user') || null;
+        let memories = [];
+        let targetGoal = 20;
 
         let currentYear = 2026;
         let currentMonth = 6; 
         let cellNodesData = [];
         let petriAnimationId = null;
+        let isEditMode = false; // 편집 모드 활성화 유무 플래그
 
         document.addEventListener('DOMContentLoaded', () => {
             initCharCounter();
             createAmbientCells();
-            renderMemoryCells();
-            renderCalendar();
-            renderProfile();
-            updateAuthUI(); // 초기 로드 시 로그인 상태 UI 업데이트
+            loadUserData(); 
+            updateAuthUI();
 
             document.getElementById('detail-modal').addEventListener('click', function(e) {
                 if(e.target === this) closeModal();
             });
+            document.getElementById('auth-modal').addEventListener('click', function(e) {
+                if(e.target === this) closeAuthModal();
+            });
         });
 
-        // 로그인 / 로그아웃 시스템 제어 함수
+        function loadUserData() {
+            if (!currentUser) {
+                memories = [];
+                targetGoal = 20;
+            } else {
+                memories = JSON.parse(localStorage.getItem(`memories_${currentUser}`)) || [];
+                targetGoal = parseInt(localStorage.getItem(`targetGoal_${currentUser}`)) || 20;
+            }
+            
+            const badgeText = currentUser === 'guest' ? '(가입 없이 사용 중)' : (currentUser ? `(${currentUser}님 계정)` : '');
+            document.getElementById('write-user-badge').innerText = badgeText;
+            document.getElementById('cells-user-badge').innerText = badgeText;
+            document.getElementById('profile-user-badge').innerText = badgeText;
+        }
+
         function updateAuthUI() {
             const authBtn = document.getElementById('auth-btn');
-            if (isLoggedIn) {
+            if (currentUser) {
                 authBtn.innerText = '로그아웃';
             } else {
                 authBtn.innerText = '로그인';
             }
         }
 
-        function toggleAuth() {
-            if (isLoggedIn) {
-                // 로그아웃 처리
-                isLoggedIn = false;
-                localStorage.setItem('isLoggedIn', false);
-                showToast('로그아웃 되었습니다.');
+        function openAuthModal() {
+            if (currentUser) {
+                currentUser = null;
+                localStorage.removeItem('memotive_current_user');
+                memories = [];
+                cellNodesData = [];
+                isEditMode = false;
                 updateAuthUI();
+                showToast('로그아웃 되었습니다. 저장소가 잠깁니다.');
                 navigateTo('home');
+                setTimeout(() => { window.location.reload(); }, 300);
             } else {
-                // 로그인 처리 (간이 알림 팝업 창 처리)
-                const username = prompt('아이디를 입력하세요:');
-                if (username) {
-                    isLoggedIn = true;
-                    localStorage.setItem('isLoggedIn', true);
-                    showToast(`${username}님, 환영합니다!`);
-                    updateAuthUI();
-                }
+                document.getElementById('auth-username-input').value = '';
+                document.getElementById('auth-modal').classList.add('show');
             }
         }
 
-        // 목표 수정 기능 제어 함수
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('show');
+        }
+
+        function submitLogin() {
+            const username = document.getElementById('auth-username-input').value.trim();
+            if (!username) { alert('아이디를 입력해 주세요.'); return; }
+            if (username.toLowerCase() === 'guest') { alert('guest는 예약어입니다. 다른 ID를 써주세요.'); return; }
+
+            currentUser = username;
+            localStorage.setItem('memotive_current_user', currentUser);
+            loadUserData();
+            updateAuthUI();
+            closeAuthModal();
+            showToast(`${currentUser}님 환영합니다! 해당 계정 세포를 불러옵니다.`);
+            navigateTo('cells');
+        }
+
+        function loginAsGuest() {
+            currentUser = 'guest';
+            localStorage.setItem('memotive_current_user', currentUser);
+            loadUserData();
+            updateAuthUI();
+            closeAuthModal();
+            showToast('가입 없이 체험 공간이 열렸습니다!');
+            navigateTo('write');
+        }
+
         function editTargetGoal() {
+            if (!currentUser) { alert('로그인이 필요한 기능입니다.'); return; }
             const newGoal = prompt('새로운 한 달 목표 기록 일수를 입력하세요 (숫자만 입력):', targetGoal);
             if (newGoal !== null) {
                 const parsedGoal = parseInt(newGoal);
@@ -518,15 +696,31 @@
                     alert('올바른 숫자를 입력해 주세요.');
                 } else {
                     targetGoal = parsedGoal;
-                    localStorage.setItem('targetGoal', targetGoal);
+                    localStorage.setItem(`targetGoal_${currentUser}`, targetGoal);
                     document.getElementById('target-goal-text').innerText = targetGoal;
-                    renderProfile(); // 대시보드 그래프 즉시 재연산 및 갱신
+                    renderProfile();
                     showToast('목표가 수정되었습니다.');
                 }
             }
         }
 
         function navigateTo(pageId) {
+            if (pageId !== 'home' && !currentUser) {
+                alert('로그인 또는 [가입 없이 사용하기]를 클릭해야 공간을 이용할 수 있습니다!');
+                openAuthModal();
+                return;
+            }
+
+            // 페이지 이탈 시 편집 모드 초기화 강제 해제
+            if (isEditMode) {
+                isEditMode = false;
+                const btn = document.getElementById('btn-edit-toggle');
+                if(btn) {
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="fa-solid fa-pen"></i> 편집하기';
+                }
+            }
+
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(nav => nav.classList.remove('active'));
             
@@ -549,13 +743,14 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        function initCharCounter() {
+        initCharCounter = () => {
             const textarea = document.getElementById('memory-input');
             const counter = document.getElementById('char-count');
             textarea.addEventListener('input', () => { counter.innerText = textarea.value.length; });
         }
 
         function saveMemory() {
+            if (!currentUser) { alert('권한이 없습니다.'); return; }
             const textarea = document.getElementById('memory-input');
             const text = textarea.value.trim();
             if (!text) { alert('내용을 입력해 주세요.'); return; }
@@ -565,13 +760,71 @@
             
             const newMemory = { id: Date.now(), date: dateStr, content: text, timestamp: now.getTime() };
             memories.push(newMemory);
-            localStorage.setItem('memories', JSON.stringify(memories));
+            
+            localStorage.setItem(`memories_${currentUser}`, JSON.stringify(memories));
 
             textarea.value = '';
             document.getElementById('char-count').innerText = 0;
             
-            showToast('오늘의 기억이 저장되었습니다.');
+            showToast('오늘의 기억이 세포로 등록되었습니다.');
             setTimeout(() => navigateTo('cells'), 800);
+        }
+
+        // --- EDIT MODE TOGGLE FUNCTION (기억세포 정지 및 삭제 토글 로직) ---
+        function toggleEditMode() {
+            if (!currentUser || memories.length === 0) return;
+            
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('btn-edit-toggle');
+            const deleteButtons = document.querySelectorAll('.cell-delete-btn');
+
+            if (isEditMode) {
+                // 편집 모드 켜짐 -> 애니메이션 멈춤 및 X 노출
+                cancelAnimationFrame(petriAnimationId);
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> 완료하기';
+                deleteButtons.forEach(b => b.style.display = 'flex');
+                
+                // 편집 시에는 검색창 무력화
+                document.getElementById('cell-search').value = '';
+                searchCells();
+            } else {
+                // 편집 모드 꺼짐 -> 애니메이션 다시 기동 및 X 숨김
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fa-solid fa-pen"></i> 편집하기';
+                deleteButtons.forEach(b => b.style.display = 'none');
+                animatePetriDish();
+            }
+        }
+
+        // 특정 세포 삭제 실행 함수
+        function deleteCell(id, event) {
+            event.stopPropagation(); // 세포 클릭 이벤트(상세 모달 팝업) 방지
+            
+            if (confirm('이 기억세포를 정말로 소멸시키겠습니까? 되돌릴 수 없습니다.')) {
+                // 1. 메모리 배열에서 삭제 대상 ID 필터링
+                memories = memories.filter(m => m.id !== id);
+                
+                // 2. 계정별 로컬 저장소 최신화
+                localStorage.setItem(`memories_${currentUser}`, JSON.stringify(memories));
+                
+                showToast('기억세포가 소멸되었습니다.');
+                
+                // 3. 편집 상태 유지하며 페트리접시 화면 재구성
+                const currentEditState = isEditMode;
+                renderMemoryCells();
+                
+                if (currentEditState && memories.length > 0) {
+                    isEditMode = true;
+                    cancelAnimationFrame(petriAnimationId);
+                    const btn = document.getElementById('btn-edit-toggle');
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> 완료하기';
+                    document.querySelectorAll('.cell-delete-btn').forEach(b => b.style.display = 'flex');
+                } else {
+                    isEditMode = false;
+                }
+            }
         }
 
         function renderMemoryCells() {
@@ -580,8 +833,16 @@
             dish.innerHTML = '';
             dish.appendChild(msg);
 
-            if (memories.length === 0) { msg.style.display = 'block'; return; } 
-            else { msg.style.display = 'none'; }
+            // 편집하기 버튼 상태 제어
+            const editToggleBtn = document.getElementById('btn-edit-toggle');
+            if (!currentUser || memories.length === 0) {
+                msg.style.display = 'block';
+                if(editToggleBtn) editToggleBtn.style.display = 'none';
+                return;
+            } else {
+                msg.style.display = 'none';
+                if(editToggleBtn) editToggleBtn.style.display = 'flex';
+            }
 
             cellNodesData = [];
             const colors = ['rgba(126, 108, 249, 0.65)', 'rgba(185, 167, 255, 0.7)', 'rgba(167, 231, 215, 0.75)', 'rgba(205, 232, 255, 0.8)'];
@@ -603,12 +864,18 @@
                 const x = Math.random() * (dish.clientWidth - size - 40) + 20;
                 const y = Math.random() * (dish.clientHeight - size - 40) + 20;
 
-                // 초기 left, top 배치 부여
                 node.style.left = `${x}px`;
                 node.style.top = `${y}px`;
 
-                // 터치가 절대 씹히지 않는 완벽 맵핑 방식 구현
+                // 개별 세포 삭제 전용 엘리먼트 동적 탑재
+                const delBtn = document.createElement('div');
+                delBtn.className = 'cell-delete-btn';
+                delBtn.innerHTML = '&times;';
+                delBtn.onclick = (e) => deleteCell(mem.id, e);
+                node.appendChild(delBtn);
+
                 node.addEventListener('click', (e) => {
+                    if (isEditMode) return; // 편집 상태에서는 상세 모달창 열기를 방어
                     e.stopPropagation(); 
                     openModal(mem);
                 });
@@ -627,11 +894,13 @@
             });
 
             cancelAnimationFrame(petriAnimationId);
-            animatePetriDish();
+            if (!isEditMode) {
+                animatePetriDish();
+            }
         }
 
-        // 실시간 left, top 이동 연산으로 변형하여 모달 무한 열림/터치 간섭을 근본적으로 제거했습니다.
         function animatePetriDish() {
+            if (isEditMode) return; // 편집 상태일 경우 움직임 캔슬
             const dish = document.getElementById('petri-dish');
             if(!dish) return;
             const W = dish.clientWidth;
@@ -657,6 +926,7 @@
         }
 
         function searchCells() {
+            if (isEditMode) return; // 편집모드일 때는 검색 중단
             const query = document.getElementById('cell-search').value.toLowerCase().trim();
             const msg = document.getElementById('no-memories-msg');
             let hasResult = false;
@@ -749,7 +1019,6 @@
             document.getElementById('target-goal-text').innerText = targetGoal;
 
             const uniqueDays = new Set(monthMemories.map(m => m.date)).size;
-            // 20 고정이 아닌 변동 타겟값 기반으로 달성률 비율 연산 변경
             const percent = Math.min(Math.round((uniqueDays / targetGoal) * 100), 100);
 
             document.getElementById('chart-percentage').innerText = `${percent}%`;
@@ -815,6 +1084,188 @@
                 container.appendChild(cell);
             }
         }
-    </script>
+
+        /* 캐릭터 인터랙션 전용 스크립트 함수 */
+        function motiPress(element) {
+            element.classList.add('active');
+        }
+
+        function motiRelease(element) {
+            element.classList.remove('active');
+        }
+
+        /* --- MOTI FEEDING INTERACTION SCRIPT --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            initMotiFeedingSystem();
+        });
+
+        function initMotiFeedingSystem() {
+            const container = document.querySelector('.moti-container');
+            const moti = document.querySelector('.moti');
+            if (!container || !moti) return;
+
+            // 먹이 세포 5개 배치
+            const cellPositions = [
+                { top: '-10px', left: '-20px' },
+                { top: '20px', right: '-25px' },
+                { bottom: '10px', left: '-30px' },
+                { bottom: '-15px', right: '-10px' },
+                { top: '-25px', left: '50%' }
+            ];
+
+            cellPositions.forEach((pos, index) => {
+                createFeedingCell(container, moti, pos, index);
+            });
+        }
+
+        function createFeedingCell(container, moti, pos, index) {
+            const cell = document.createElement('div');
+            cell.className = 'feeding-cell';
+            
+            // 위치 설정
+            Object.keys(pos).forEach(key => {
+                cell.style[key] = pos[key];
+            });
+            cell.style.animationDelay = `${index * 0.4}s`;
+
+            container.appendChild(cell);
+
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            // 드래그 시작 (마우스 및 터치 지원)
+            const startDrag = (e) => {
+                isDragging = true;
+                cell.classList.add('dragging');
+                
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                startX = clientX;
+                startY = clientY;
+                
+                const rect = cell.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                // 현재 위치 계산
+                initialLeft = rect.left - containerRect.left;
+                initialTop = rect.top - containerRect.top;
+
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('touchmove', onDrag, { passive: false });
+                document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('touchend', stopDrag);
+            };
+
+            // 드래그 중
+            const onDrag = (e) => {
+                if (!isDragging) return;
+                if (e.cancelable) e.preventDefault();
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const deltaX = clientX - startX;
+                const deltaY = clientY - startY;
+
+                cell.style.left = `${initialLeft + deltaX}px`;
+                cell.style.top = `${initialTop + deltaY}px`;
+                cell.style.right = 'auto';
+                cell.style.bottom = 'auto';
+
+                // Moti와의 거리 측정 (충돌 감지)
+                const cellRect = cell.getBoundingClientRect();
+                const motiRect = moti.getBoundingClientRect();
+
+                const cellCenter = { x: cellRect.left + cellRect.width / 2, y: cellRect.top + cellRect.height / 2 };
+                const motiCenter = { x: motiRect.left + motiRect.width / 2, y: motiRect.top + motiRect.height / 2 };
+
+                const distance = Math.hypot(cellCenter.x - motiCenter.x, cellCenter.y - motiCenter.y);
+
+                // Moti 근처로 다가가면 크기가 살짝 반응
+                if (distance < motiRect.width / 2 + 30) {
+                    moti.style.transform = 'scale(1.08)';
+                } else {
+                    moti.style.transform = '';
+                }
+            };
+
+            // 드래그 종료 및 먹이기 판정
+            const stopDrag = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                cell.classList.remove('dragging');
+
+ document.removeEventListener('mousemove', onDrag);
+ document.removeEventListener('touchmove', onDrag);
+ document.removeEventListener('mouseup', stopDrag);
+ document.removeEventListener('touchend', stopDrag);
+
+ cellRect = cell.getBoundingClementRect();
+ const motiRect = moti.getBoundingCle라이언트Rect();
+
+ cellCenter = { x: cellRect.left + cellRect.너비 / 2, y: cellRect.top + cellRect.높이 / 2 };
+ motiCenter = { x: motiRect.left + motiRect.너비 / 2, y: motiRect.top + motiRect.높이 / 2 };
+
+ 상수 거리 = Math.hypot(cellCenter.x - motiCenter.x, cellCenter.y - motiCenter).y);
+
+ moti.style.transform = '';
+
+                // 모티 입/몸통 안으로 세포를 넣었을 때 먹기 반응
+ 만약 (거리 < motiRect.너비 / 2) {
+ 피드모티(모티, 셀, 용기, 포즈, 인덱스);
+                } 또 다른 {
+                    // 원위치로 제자리 복귀
+ cell.style.transition = '모든 0.4초가 쉽다';
+ Object.keys(pos).각각에 대해 (키 => {
+ cell.style[키] = pos[키];
+ });
+ setTimeout((() => {
+ cell.style.transition = '';
+ }, 400);
+                }
+ }
+
+ cell.addEventListener('mousedown', startDrag);
+ cell.addEventListener('touchstart', startDrag, {passive: false });
+        }
+
+        // 모티가 세포를 먹었을 때 연출
+ 함수 feedMoti(모티, 셀, 컨테이너, 포즈, 인덱스) {
+            // 1. 세포 소멸 애니메이션
+ cell.style.transition = '모든 0.2초가 쉽게 들어올 수 있습니다';
+ cell.style.transform = 'scale(0)';
+ 셀.스타일.불투명도 = '0';
+
+            // 2. 모티 꿀꺽 애니메이션 적용
+ moti.classList.add('먹다');
+            
+            // 3. 하트 이펙트 팝업
+ showHeartPop(모티);
+
+ setTimeout((() => {
+ moti.classList.remove('먹음');
+ }, 500);
+
+            // 4. 3초 후 새로운 세포 재생성
+ setTimeout((() => {
+ 세포.() 제거;
+ FeedingCell(컨테이너, 모티, 포즈, 인덱스) 생성;
+ }, 3000);
+        }
+
+ 기능. 쇼하트팝(모티) {
+ const heart = document.createElement('i');
+ heart.class이름 = 'fa-solid fa-heart moti-heart-pop';
+ heart.style.left = '50%';
+ heart.style.top = '20%';
+            
+ moti.appendChild(하트);
+            
+ setTimeout((() => {
+ 심장.() 제거;
+ }, 800);
+        }
+ </대본>
 </body>
 </html>
